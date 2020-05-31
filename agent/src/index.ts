@@ -1,8 +1,6 @@
 import './ready'
 import './polyfill'
-// import './observers/http'
-
-import { init as appLifeCycleHook, dispose as disableAppLifeCycleHook } from './observers/lifecycle'
+import './observers/http'
 
 import { interfaces, invoke, register } from './rpc'
 import modules from './modules/index'
@@ -25,10 +23,6 @@ function registerModules() {
     }
   }
 
-  destructors.add(disableAppLifeCycleHook)
-
-  // fixme: destructor hook doesn't work at all
-  // script destroyed before receiving this message
   recv('dispose', () => {
     for (const cb of destructors) {
       try {
@@ -40,8 +34,7 @@ function registerModules() {
   })  
 }
 
-registerModules()
-// appLifeCycleHook()
+setImmediate(registerModules)
 
 Process.setExceptionHandler((detail) => {
   console.error('Exception report: ')

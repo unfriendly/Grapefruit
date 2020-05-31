@@ -4,6 +4,8 @@ import http from 'http'
 
 import io from 'socket.io'
 import REPL from './repl'
+import Middleware from './middleware'
+import Packets from './middleware/packets'
 import * as transfer from './transfer'
 import { wrap, tryGetDevice } from './device'
 import { connect, proxy } from './rpc'
@@ -22,11 +24,13 @@ export default class Channels {
   devices: io.Namespace
   session: io.Namespace
   changedSignal: frida.DevicesChangedHandler
+  middlewares: Array<Middleware>
 
   constructor(srv: http.Server) {
     this.socket = io(srv)
     this.devices = this.socket.of('/devices')
     this.session = this.socket.of('/session')
+    this.middlewares = []
   }
 
   onchange(): void {
@@ -37,7 +41,13 @@ export default class Channels {
     mgr.changed.disconnect(this.changedSignal)
   }
 
+  use(Clazz: typeof Middleware): void {
+    this.middlewares.push(new Clazz())
+  }
+
   connect(): void {
+    this.use(Packets)
+
     this.changedSignal = this.onchange.bind(this)
     mgr.changed.connect(this.changedSignal)
 
