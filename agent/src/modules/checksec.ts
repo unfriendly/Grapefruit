@@ -2,12 +2,20 @@ import { dictFromPlistCharArray } from '../lib/dict'
 import { encryptionInfo, pie } from '../lib/macho'
 
 
-export default function checksec() {
-  const [main] = Process.enumerateModules()
-  const imports = new Set(main.enumerateImports().map(i => i.name))
+export default function checksec(name?: string) {
+  let mod: Module
+  if (name) {
+    const m = Process.findModuleByName(name)
+    if (!m) throw Error(`${name} not found`)
+    mod = m
+  } else {
+    mod = Process.enumerateModules()[0]
+  }
+
+  const imports = new Set(mod.enumerateImports().map(i => i.name))
   const result = {
-    pie: pie(main),
-    encrypted: !encryptionInfo(main).ptr.isNull(),
+    pie: pie(mod),
+    encrypted: !encryptionInfo(mod).ptr.isNull(),
     canary: imports.has('__stack_chk_guard'),
     arc: imports.has('objc_release'),
     entitlements: {}
