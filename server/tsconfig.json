@@ -1,27 +1,27 @@
 {
-    "compilerOptions": {
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "lib": [
-            "es2017"
-        ],
-        "target": "es2017",
-        "module": "commonjs",
-        "declaration": true,
-        "outDir": "./dist",
-        "typeRoots": [
-            "node_modules/@types"
-        ],
-        "types": [
-            "node",
-            "mocha"
-        ],
-        "esModuleInterop": true,
-        "resolveJsonModule": true
-    },
-    "include": [
-        "app.ts",
-        "tests/**/*.js",
-        "lib/**/*.js"
-    ]
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es2017"
+    ],
+    "target": "es2017",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./dist",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "types": [
+      "node",
+      "mocha"
+    ],
+    "esModuleInterop": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "app.ts",
+    "tests/**/*.js",
+    "lib/**/*.js"
+  ]
 }
